@@ -31,7 +31,7 @@ public class ProductController {
 	@GetMapping("/products/{code}")
 	public Product productByCode(@PathVariable("code") String code) {
 		return productService.findByProductCode(code)
-				.orElseThrow(() -> new ProductNotFoundException("Product with code [" + "] does not exist"));
+				.orElseThrow(() -> new ProductNotFoundException("Product with code [" + code + "] does not exist"));
 	}
 
 }
