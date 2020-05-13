@@ -3,8 +3,6 @@ package com.tobias.saul.catalogservice.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,6 @@ import com.tobias.saul.catalogservice.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Transactional
 @Slf4j
 public class ProductService {
 	
