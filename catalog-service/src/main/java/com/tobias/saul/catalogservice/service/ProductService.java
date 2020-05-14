@@ -34,7 +34,7 @@ public class ProductService {
 	public Optional<Product> findByProductCode(String code) {
 		Optional<Product> productOptional = productRepository.findByCode(code);
 		if(productOptional.isPresent()) {
-			ProductInventoryResponse itemResponse = restTemplate.getForObject("http://localhost:8282/api/v1/inventory/{code}",
+			ProductInventoryResponse itemResponse = restTemplate.getForObject("http://inventory-service/api/v1/inventory/{code}",
 					ProductInventoryResponse.class, code);
 			
 			if(itemResponse != null) {
