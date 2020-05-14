@@ -21,6 +21,8 @@ public class Product {
 	private String name;
 	private String description;
 	private double price;
+	@Column(columnDefinition = "boolean default false")
+	private boolean inStock;
 	
 	public Product() {}
 
@@ -70,6 +72,7 @@ public class Product {
 		int result = 1;
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + (inStock ? 1231 : 1237);
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(price);
@@ -97,6 +100,8 @@ public class Product {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
+		if (inStock != other.inStock)
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -115,7 +120,15 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", code=" + code + ", name=" + name + ", description=" + description
-				+ ", price=" + price + "]";
+				+ ", price=" + price + ", inStock=" + inStock + "]";
+	}
+
+	public boolean isInStock() {
+		return inStock;
+	}
+
+	public void setInStock(boolean inStock) {
+		this.inStock = inStock;
 	}
 	
 	
