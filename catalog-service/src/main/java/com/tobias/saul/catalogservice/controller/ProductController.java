@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tobias.saul.catalogservice.assembler.ProductModelAssembler;
 import com.tobias.saul.catalogservice.exception.ProductNotFoundException;
 import com.tobias.saul.catalogservice.pojos.Product;
 import com.tobias.saul.catalogservice.service.ProductService;
@@ -22,10 +23,12 @@ import com.tobias.saul.catalogservice.service.ProductService;
 public class ProductController {
 	
 	private final ProductService productService;
+	private final ProductModelAssembler assembler;
 	
 	@Autowired
-	public ProductController(ProductService productService) {
+	public ProductController(ProductService productService, ProductModelAssembler assembler) {
 		this.productService = productService;
+		this.assembler = assembler;
 	}
 	
 	@GetMapping("/products")
@@ -33,9 +36,7 @@ public class ProductController {
 		
 		List<EntityModel<Product>> products = productService.findAllProducts()
 				.stream()
-				.map(product -> new EntityModel<Product>(product,
-						linkTo(methodOn(ProductController.class).productByCode(product.getCode())).withSelfRel(),
-						linkTo(methodOn(ProductController.class).allProducts()).withRel("products")))
+				.map(assembler::toModel)
 				.collect(Collectors.toList());
 		
 		return new CollectionModel<EntityModel<Product>>(products,
@@ -48,9 +49,7 @@ public class ProductController {
 		Product product = productService.findByProductCode(code)
 				.orElseThrow(() -> new ProductNotFoundException("Product with code [" + code + "] does not exist"));
 		
-		return new EntityModel<Product>(product,
-				linkTo(methodOn(ProductController.class).productByCode(code)).withSelfRel(),
-				linkTo(methodOn(ProductController.class).allProducts()).withRel("products"));
+		return assembler.toModel(product);
 	}
 
 }
