@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,11 +36,11 @@ public class ProductService {
 	public Optional<Product> findByProductCode(String code) {
 		Optional<Product> productOptional = productRepository.findByCode(code);
 		if(productOptional.isPresent()) {
-			ProductInventoryResponse itemResponse = restTemplate.getForObject("http://inventory-service/api/v1/inventory/{code}",
+			ResponseEntity<ProductInventoryResponse> itemResponse = restTemplate.getForEntity("http://inventory-service/api/v1/inventory/{code}",
 					ProductInventoryResponse.class, code);
 			
-			if(itemResponse != null) {
-				Integer quantity = itemResponse.getAvailableQuantity();
+			if(itemResponse.getStatusCode() == HttpStatus.OK) {
+				Integer quantity = itemResponse.getBody().getAvailableQuantity();
 				productOptional.get().setInStock(quantity > 0);
 			} else {
 				System.out.println("Unable to get inventory");
